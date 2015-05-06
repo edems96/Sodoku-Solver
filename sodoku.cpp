@@ -14,6 +14,8 @@ struct Sodoku {
 	
 	uint val;
 	
+	Sodoku() : col(0), row(0), block(0), val(0) {}
+	
 	bool isEmpty() { return val == 0; }
 };
 
@@ -22,23 +24,61 @@ Sodoku sodoku[9*9];
 void readFile();
 void solve();
 void print();
+
 uint ctoi(char c);
 
+bool hasInCol(uint col, uint v);
+bool hasInRow(uint row, uint v);
+bool hasInBlock(uint block, uint v);
+
 int main() {
-	readFile();
-	print();
-	//solve();
+	cout << "main()" << endl;
 	
+	readFile();
+	//solve();
+	print();
+	
+	cout << "main() -- " << endl;
 	return 1;
 }
 
 void solve() {
-/*	
+	cout << "solve()" << endl;
+	
 	while( true ) {
+		bool ret = false;
+		
+		for(uint i = 0; i < 9*9; i++) {
+			if( !sodoku[i].isEmpty() )
+				continue;
+			
+			bool find = false;
+			
+			for(uint x = 1; x < 10; x++) {
+				if( hasInCol(sodoku[i].col, x) )
+					continue;
+
+				if( hasInRow(sodoku[i].row, x) )
+					continue;
+					
+				if( hasInBlock(sodoku[i].block, x) )
+					continue;
+					
+				sodoku[i].val = x;
+				find = true;
+				
+				print();
+			}
+			
+			if( !find )
+				ret = true;
+		}
 	
-	
+		if( !ret )
+			break;
 	}
-	*/
+	
+	cout << "Solved" << endl;
 }
 
 void readFile() {
@@ -51,9 +91,8 @@ void readFile() {
 		return;
 	}
 	
-	uint col, row, block;
-
-	uint i = 0;
+	uint col = 0, row = 0, block = 0, i = 0;
+	uint blockC = 0;
 	
 	while( !feof(f) ) {
 		int c = fgetc(f);
@@ -63,23 +102,24 @@ void readFile() {
 		if( c == '\n' ) {
 			col = 0;
 			row++;
-			block++;
-			cout << endl;
+			
+			if( row == 3 || row == 6 )
+				blockC++;
 		} else {
 			Sodoku s;
 			
 			s.col = col++;
 			s.row = row;
 			
-			if( col != 0 && col % 3 == 0 )
+			if( col == 4 || col == 7 )
 				block++;
 			
 			s.block = block;
 			
-			if( c != '*' )
+			if( c != '*' ) 
 				s.val = ctoi(c);	
 		
-			sodoku[i] = s;
+			sodoku[i++] = s;
 		}
 	}
 	
@@ -87,16 +127,16 @@ void readFile() {
 }
 
 void print() {
-	cout << endl;
+	cout << endl << endl;
 	
 	for(uint i = 0; i < 9*9; i++) {
+		cout << sodoku[i].block << " ";
+		
 		if( (i+1) % 9 == 0 )
 			cout << endl;
-			
-		cout << sodoku[i].val;
 	}
 	
-	cout << endl;
+	cout << endl << endl;
 }
 
 uint ctoi(char c) {
@@ -112,4 +152,40 @@ uint ctoi(char c) {
 		case '8': return 8;
 		case '9': return 9;
 	}
+}
+
+bool hasInCol(uint col, uint v) {
+	for(uint i = 0; i < 9*9; i++) {
+		if( sodoku[i].col != col )
+			continue;
+			
+		if( sodoku[i].val == v )
+			return true;
+	}
+	
+	return false;
+}
+
+bool hasInRow(uint row, uint v) {
+	for(uint i = 0; i < 9*9; i++) {
+		if( sodoku[i].row != row )
+			continue;
+			
+		if( sodoku[i].val == v )
+			return true;
+	}
+	
+	return false;
+}
+
+bool hasInBlock(uint block, uint v) {
+	for(uint i = 0; i < 9*9; i++) {
+		if( sodoku[i].block != block )
+			continue;
+			
+		if( sodoku[i].val == v )
+			return true;
+	}
+	
+	return false;
 }
