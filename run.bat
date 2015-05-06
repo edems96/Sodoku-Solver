@@ -1,0 +1,2 @@
+sodoku.exe
+pause
