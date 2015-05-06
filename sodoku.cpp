@@ -92,7 +92,6 @@ void readFile() {
 	}
 	
 	uint col = 0, row = 0, block = 0, i = 0;
-	uint blockC = 0;
 	
 	while( !feof(f) ) {
 		int c = fgetc(f);
@@ -103,18 +102,23 @@ void readFile() {
 			col = 0;
 			row++;
 			
-			if( row == 3 || row == 6 )
-				blockC++;
+			if( row < 3 )
+				block = 0;
+			else if( row < 6 )
+				block = 3;
+			else 
+				block = 6;
+				
 		} else {
 			Sodoku s;
 			
 			s.col = col++;
 			s.row = row;
 			
-			if( col == 4 || col == 7 )
-				block++;
-			
 			s.block = block;
+			
+			if( col % 3 == 0 )
+				block++;
 			
 			if( c != '*' ) 
 				s.val = ctoi(c);	
