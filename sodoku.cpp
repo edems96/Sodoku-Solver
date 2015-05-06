@@ -35,8 +35,8 @@ int main() {
 	cout << "main()" << endl;
 	
 	readFile();
-	//solve();
-	print();
+	solve();
+	//print();
 	
 	cout << "main() -- " << endl;
 	return 1;
@@ -52,8 +52,6 @@ void solve() {
 			if( !sodoku[i].isEmpty() )
 				continue;
 			
-			bool find = false;
-			
 			for(uint x = 1; x < 10; x++) {
 				if( hasInCol(sodoku[i].col, x) )
 					continue;
@@ -65,17 +63,14 @@ void solve() {
 					continue;
 					
 				sodoku[i].val = x;
-				find = true;
-				
 				print();
+				
+				break;
 			}
 			
-			if( !find )
+			if( sodoku[i].isEmpty() )
 				ret = true;
 		}
-	
-		if( !ret )
-			break;
 	}
 	
 	cout << "Solved" << endl;
@@ -134,7 +129,7 @@ void print() {
 	cout << endl << endl;
 	
 	for(uint i = 0; i < 9*9; i++) {
-		cout << sodoku[i].block << " ";
+		cout << sodoku[i].val << " ";
 		
 		if( (i+1) % 9 == 0 )
 			cout << endl;
